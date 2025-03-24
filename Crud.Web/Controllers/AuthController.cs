@@ -9,11 +9,11 @@ namespace Crud.Web.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly UserManager<RPouyaAdmins> _userManager;
-        private readonly SignInManager<RPouyaAdmins> _signInManager;
+        private readonly UserManager<RPouyaAdmin> _userManager;
+        private readonly SignInManager<RPouyaAdmin> _signInManager;
 
-        public AuthController(UserManager<RPouyaAdmins> userManager,
-            SignInManager<RPouyaAdmins> signInManager)
+        public AuthController(UserManager<RPouyaAdmin> userManager,
+            SignInManager<RPouyaAdmin> signInManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;

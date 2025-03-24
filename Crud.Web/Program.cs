@@ -1,13 +1,15 @@
+using Crud.Infrastructure.EFCore;
 using Crud.Web.Models.Login;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<RPouyaDb>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<RPouyaDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<RPouyaAdmins, IdentityRole>()
-    .AddEntityFrameworkStores<RPouyaDb>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
+    .AddEntityFrameworkStores<RPouyaDbContext>().AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

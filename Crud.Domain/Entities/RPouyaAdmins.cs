@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Crud.Web.Models.Login;
+namespace Crud.Domain.Entities;
 
 public class RPouyaAdmins : IdentityUser
 {
