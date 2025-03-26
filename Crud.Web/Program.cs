@@ -1,5 +1,6 @@
+using Crud.Domain.Entities;
 using Crud.Infrastructure.EFCore;
-using Crud.Web.Models.Login;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +11,45 @@ builder.Services.AddDbContext<RPouyaDbContext>(options => options.UseSqlServer(b
 
 builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
     .AddEntityFrameworkStores<RPouyaDbContext>().AddDefaultTokenProviders();
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Auth/Login";
-    options.AccessDeniedPath = "/";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.Cookie.Name = "AuthCookie";
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.Cookie.Name = "AuthCookie";
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminBasic", policy =>
+    {
+        policy.RequireClaim("AccessLevel", "AdminBasic");
+    });
+
+    options.AddPolicy("AdminIntermediate", policy =>
+    {
+        policy.RequireClaim("AccessLevel", "AdminIntermediate", "AdminBasic");
+    });
+
+    options.AddPolicy("AdminAdvanced", policy =>
+    {
+        policy.RequireClaim("AccessLevel", "AdminAdvanced", "AdminIntermediate", "AdminBasic");
+    });
 });
 
 var app = builder.Build();
@@ -30,6 +65,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

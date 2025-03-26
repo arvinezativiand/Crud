@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Crud.Web.Models.Login;
+namespace Crud.Web.Models.SignIn;
 
 public class LoginViewModel
 {

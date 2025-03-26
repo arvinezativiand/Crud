@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Crud.Infrastructure.EFCore;
 
-public class RPouyaDbContext : IdentityDbContext<RPouyaAdmins>
+public class RPouyaDbContext : IdentityDbContext<RPouyaAdmin>
 {
     public RPouyaDbContext(DbContextOptions<RPouyaDbContext> options) : base(options)
     {
