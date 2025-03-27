@@ -10,8 +10,10 @@ public class RPouyaDbContext : IdentityDbContext<RPouyaAdmin>
     {
                 
     }
+    public DbSet<RPouyaUser> RPouyaUsers { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        //builder.Entity<RPouyaUser>().HasKey(u => u.IdNumber);
         base.OnModelCreating(builder);
     }
 }

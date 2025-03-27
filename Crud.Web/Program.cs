@@ -1,5 +1,10 @@
+using Crud.Application.DbTransaction;
+using Crud.Application.Services.Implimentations;
+using Crud.Application.Services.Interfaces;
 using Crud.Domain.Entities;
+using Crud.Domain.Repository;
 using Crud.Infrastructure.EFCore;
+using Crud.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +16,19 @@ builder.Services.AddDbContext<RPouyaDbContext>(options => options.UseSqlServer(b
 
 builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
     .AddEntityFrameworkStores<RPouyaDbContext>().AddDefaultTokenProviders();
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Auth/Login";
-    options.AccessDeniedPath = "/Auth/AccessDenied";
-    options.Cookie.Name = "AuthCookie";
-    options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    options.SlidingExpiration = true;
-});
+
+builder.Services.AddTransient<IBaseRepository<RPouyaUser>, BaseRepository<RPouyaUser>>();
+builder.Services.AddTransient<IRPouyaUserService, RPouyaUserService>(); 
+builder.Services.AddTransient<IRPouyaDb, RPouyaDb>();
+
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.LoginPath = "/Auth/Login";
+//    options.AccessDeniedPath = "/Auth/AccessDenied";
+//    options.Cookie.Name = "AuthCookie";
+//    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+//    options.SlidingExpiration = true;
+//});
 
 builder.Services.AddAuthentication(options =>
 {

@@ -1,12 +1,12 @@
-﻿namespace Crud.Domain.Repository;
+﻿using Crud.Domain.Entities;
 
-public interface IBaseRepository<TEntity>
+namespace Crud.Domain.Repository;
+
+public interface IBaseRepository<TEntity> where TEntity : BaseEntity
 {
     Task<TEntity> AddAsync(TEntity entity);
-    Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities, int chunk = 100);
-
     Task<TEntity> UpdateAsync(TEntity entity);
-    Task<bool> DeleteAsync(ulong id);
+    Task<bool> DeleteAsync(ulong Id);
 
     Task<TEntity?> GetByIdAsync(ulong id);
     Task<IList<TEntity>?> GetAllAsync();
