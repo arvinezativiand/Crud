@@ -36,7 +36,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         return entity != null;
     }
 
-    public async Task<IList<TEntity>?> GetAllAsync()
+    public async Task<IEnumerable<TEntity>?> GetAllAsync()
     {
         return await _dbSet.ToListAsync<TEntity>();
     }

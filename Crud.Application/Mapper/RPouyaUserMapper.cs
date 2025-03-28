@@ -1,5 +1,6 @@
 ﻿using Crud.Application.DTOs;
 using Crud.Domain.Entities;
+using System.Linq;
 
 namespace Crud.Application.Mapper;
 
@@ -29,6 +30,29 @@ public static class RPouyaUserMapper
         return userDTO;
     }
 
-    public static 
+    public static List<RPouyaUserDTO> MapToDTOs(IEnumerable<RPouyaUser> users)
+    {
+        List<RPouyaUserDTO> userDTOs = [];
+        foreach (var user in users)
+        {
+            var userDTO = MapToDTO(user);
+            userDTOs.Add(userDTO);
+        }
+
+        return userDTOs;
+    }
+
+    public static List<RPouyaUser> MapToUsers(IEnumerable<RPouyaUserDTO> userDTOs)
+    {
+        List<RPouyaUser> users = [];
+
+        foreach (var userDTO in userDTOs)
+        {
+            var user = MapToUser(userDTO);
+            users.Append(user);
+        }
+
+        return users;
+    }
 }
 

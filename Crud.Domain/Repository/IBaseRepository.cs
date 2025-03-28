@@ -9,7 +9,7 @@ public interface IBaseRepository<TEntity> where TEntity : BaseEntity
     Task<bool> DeleteAsync(ulong Id);
 
     Task<TEntity?> GetByIdAsync(ulong id);
-    Task<IList<TEntity>?> GetAllAsync();
+    Task<IEnumerable<TEntity>?> GetAllAsync();
 
 }
 

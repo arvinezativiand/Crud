@@ -38,6 +38,18 @@ public class RPouyaUserService : IRPouyaUserService
         });
     }
 
+    public async Task<List<RPouyaUserDTO>> GetAllUsers()
+    {
+        var result = await _rPouyaDb.Transaction(async () =>
+        {
+            var action = await _repository.GetAllAsync();
+            return action;
+        });
+
+        List<RPouyaUserDTO> users = RPouyaUserMapper.MapToDTOs(result);
+        return users;
+    }
+
     public async Task<RPouyaUserDTO> GetUser(IdRPouyaUserDTO userDTO)
     {
         var result = await _rPouyaDb.Transaction(async () =>

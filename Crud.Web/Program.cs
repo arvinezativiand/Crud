@@ -17,6 +17,7 @@ builder.Services.AddDbContext<RPouyaDbContext>(options => options.UseSqlServer(b
 builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
     .AddEntityFrameworkStores<RPouyaDbContext>().AddDefaultTokenProviders();
 
+//Services & Repositories
 builder.Services.AddTransient<IBaseRepository<RPouyaUser>, BaseRepository<RPouyaUser>>();
 builder.Services.AddTransient<IRPouyaUserService, RPouyaUserService>(); 
 builder.Services.AddTransient<IRPouyaDb, RPouyaDb>();

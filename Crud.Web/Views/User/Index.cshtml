@@ -1,0 +1,116 @@
+﻿@model string
+@{
+    ViewData["Title"] = "مدیریت کاربران";
+}
+
+<button id="showUsersBtn" class="btn btn-primary">نمایش همه کاربران</button>
+<button id="addUserBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">افزودن کاربر</button>
+
+<div id="usersModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">لیست کاربران</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="usersListContainer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مُدال افزودن کاربر -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">افزودن کاربر جدید</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">نام کامل</label>
+                        <input type="text" class="form-control" id="fullName" name="FullName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="idNumber" class="form-label">کد ملی</label>
+                        <input type="text" class="form-control" id="idNumber" name="IdNumber" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">نام کاربری</label>
+                        <input type="text" class="form-control" id="userName" name="UserName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">رمز عبور</label>
+                        <input type="password" class="form-control" id="password" name="Password" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-primary" id="confirmAddUser">تایید</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <!-- برای مُدال -->
+    <script>
+        $(document).ready(function() {
+            // نمایش لیست کاربران در مُدال
+            $("#showUsersBtn").click(function() {
+                $.get("/User/GetAllUsers", function(users) {
+                    let html = "<ul>";
+                    users.forEach(user => {
+                        html += `<li> Full name: ${user.fullName} - Id number: ${user.idNumber}</li>`;
+                    });
+                    html += "</ul>";
+                    $("#usersListContainer").html(html);
+
+                    // نمایش مُدال
+                    new bootstrap.Modal(document.getElementById('usersModal')).show();
+                });
+        });            
+            $(document).ready(function() {
+            var accessLevel = "@Model"; // دریافت سطح دسترسی از ویو
+
+            if (accessLevel === "AdminBasic") {
+                $("#addUserBtn").prop("disabled", true).css("opacity", "0.5");
+            }
+        });
+        });
+</script>
+<script>
+            $(document).ready(function() {
+                // ارسال فرم با AJAX
+                $("#confirmAddUser").click(function() {
+                    const userData = {
+                        FullName: $("#fullName").val(),
+                        IdNumber: $("#idNumber").val(),
+                        UserName: $("#userName").val(),
+                        Password: $("#password").val()
+                    };
+
+                    $.ajax({
+                        url: "/User/AddUser",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(userData),
+                        success: function(response) {
+                            if (response.success) {
+                                $("#addUserModal").modal("hide"); // بستن مُدال
+                                $("#addUserForm")[0].reset(); // ریست فرم
+                                alert("کاربر با موفقیت اضافه شد!");
+                            }
+                            },
+                    error: function(xhr) {
+                        alert("خطا در افزودن کاربر: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
