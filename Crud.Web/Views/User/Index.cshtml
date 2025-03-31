@@ -19,7 +19,6 @@
     </div>
 </div>
 
-<!-- مُدال افزودن کاربر -->
 <div class="modal fade" id="addUserModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -57,10 +56,10 @@
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <!-- برای مُدال -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+
     <script>
         $(document).ready(function() {
-            // نمایش لیست کاربران در مُدال
             $("#showUsersBtn").click(function() {
                 $.get("/User/GetAllUsers", function(users) {
                     let html = "<ul>";
@@ -70,12 +69,11 @@
                     html += "</ul>";
                     $("#usersListContainer").html(html);
 
-                    // نمایش مُدال
                     new bootstrap.Modal(document.getElementById('usersModal')).show();
                 });
         });            
             $(document).ready(function() {
-            var accessLevel = "@Model"; // دریافت سطح دسترسی از ویو
+            var accessLevel = "@Model";
 
             if (accessLevel === "AdminBasic") {
                 $("#addUserBtn").prop("disabled", true).css("opacity", "0.5");
@@ -85,7 +83,6 @@
 </script>
 <script>
             $(document).ready(function() {
-                // ارسال فرم با AJAX
                 $("#confirmAddUser").click(function() {
                     const userData = {
                         FullName: $("#fullName").val(),
@@ -101,8 +98,8 @@
                         data: JSON.stringify(userData),
                         success: function(response) {
                             if (response.success) {
-                                $("#addUserModal").modal("hide"); // بستن مُدال
-                                $("#addUserForm")[0].reset(); // ریست فرم
+                                $("#addUserModal").modal("hide");
+                                $("#addUserForm")[0].reset();
                                 alert("کاربر با موفقیت اضافه شد!");
                             }
                             },

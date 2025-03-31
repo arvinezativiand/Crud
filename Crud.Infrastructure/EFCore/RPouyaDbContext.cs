@@ -11,9 +11,12 @@ public class RPouyaDbContext : IdentityDbContext<RPouyaAdmin>
                 
     }
     public DbSet<RPouyaUser> RPouyaUsers { get; set; }
+    public DbSet<RPouyaFile> RPouyaFiles { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        //builder.Entity<RPouyaUser>().HasKey(u => u.IdNumber);
+        builder.Entity<RPouyaFile>()
+            .OwnsOne(f => f.Data, builder => { builder.ToJson(); });
+
         base.OnModelCreating(builder);
     }
 }

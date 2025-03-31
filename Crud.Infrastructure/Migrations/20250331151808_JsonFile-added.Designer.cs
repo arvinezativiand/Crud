@@ -4,6 +4,7 @@ using Crud.Infrastructure.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Crud.Infrastructure.Migrations
 {
     [DbContext(typeof(RPouyaDbContext))]
-    partial class RPouyaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250331151808_JsonFile-added")]
+    partial class JsonFileadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,11 +97,11 @@ namespace Crud.Infrastructure.Migrations
 
             modelBuilder.Entity("Crud.Domain.Entities.RPouyaFile", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
@@ -108,7 +111,7 @@ namespace Crud.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RPouyaFiles", (string)null);
+                    b.ToTable("RPouyaFiles");
                 });
 
             modelBuilder.Entity("Crud.Domain.Entities.RPouyaUser", b =>
@@ -143,7 +146,7 @@ namespace Crud.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RPouyaUsers", (string)null);
+                    b.ToTable("RPouyaUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -283,8 +286,8 @@ namespace Crud.Infrastructure.Migrations
                 {
                     b.OwnsOne("Crud.Domain.Entities.JsonFile", "Data", b1 =>
                         {
-                            b1.Property<decimal>("RPouyaFileId")
-                                .HasColumnType("decimal(20,0)");
+                            b1.Property<int>("RPouyaFileId")
+                                .HasColumnType("int");
 
                             b1.Property<string>("Description")
                                 .IsRequired()
@@ -296,7 +299,7 @@ namespace Crud.Infrastructure.Migrations
 
                             b1.HasKey("RPouyaFileId");
 
-                            b1.ToTable("RPouyaFiles", (string)null);
+                            b1.ToTable("RPouyaFiles");
 
                             b1.ToJson("Data");
 

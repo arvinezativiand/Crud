@@ -4,6 +4,7 @@ using Crud.Infrastructure.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Crud.Infrastructure.Migrations
 {
     [DbContext(typeof(RPouyaDbContext))]
-    partial class RPouyaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250331152051_JsonFile-updated")]
+    partial class JsonFileupdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,7 +111,7 @@ namespace Crud.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RPouyaFiles", (string)null);
+                    b.ToTable("RPouyaFiles");
                 });
 
             modelBuilder.Entity("Crud.Domain.Entities.RPouyaUser", b =>
@@ -143,7 +146,7 @@ namespace Crud.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RPouyaUsers", (string)null);
+                    b.ToTable("RPouyaUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -296,7 +299,7 @@ namespace Crud.Infrastructure.Migrations
 
                             b1.HasKey("RPouyaFileId");
 
-                            b1.ToTable("RPouyaFiles", (string)null);
+                            b1.ToTable("RPouyaFiles");
 
                             b1.ToJson("Data");
 
