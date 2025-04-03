@@ -18,7 +18,8 @@ public static class RPouyaFileMapper
     {
         var file = new RPouyaFile()
         {
-            Data = fileDTO.Data
+            Data = fileDTO.Data,
+            
         };
         return file;
     }
@@ -30,7 +31,7 @@ public static class RPouyaFileMapper
         foreach (var file in files)
         {
             var fileDTO = MapToDTO(file);
-            fileDTOs.Append(fileDTO);
+            fileDTOs.Add(fileDTO);
         }
 
         return fileDTOs;

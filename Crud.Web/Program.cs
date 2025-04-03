@@ -21,6 +21,7 @@ builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
 builder.Services.AddTransient<IBaseRepository<RPouyaUser>, BaseRepository<RPouyaUser>>();
 builder.Services.AddTransient<IBaseRepository<RPouyaFile>, BaseRepository<RPouyaFile>>();
 builder.Services.AddTransient<IRPouyaUserService, RPouyaUserService>();
+builder.Services.AddTransient<IRPouyaFileService, RPouyaFileService>();
 builder.Services.AddTransient<IRPouyaDb, RPouyaDb>();
 
 //builder.Services.ConfigureApplicationCookie(options =>

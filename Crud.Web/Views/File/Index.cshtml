@@ -1,0 +1,110 @@
+﻿@model List<Crud.Application.DTOs.RPouyaFileDTO>
+
+<div class="container mt-5">
+    <div class="mb-4">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFileModal">
+            افزودن فایل جدید
+        </button>
+        <button type="button" class="btn btn-info" id="showFilesBtn">
+            نمایش همه فایل‌ها
+        </button>
+    </div>
+
+    <div id="filesListContainer" class="mt-4"></div>
+
+    <div class="modal fade" id="addFileModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">افزودن فایل JSON</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addFileForm">
+                        <div class="mb-3">
+                            <label class="form-label">عنوان</label>
+                            <input type="text" class="form-control" id="fileTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">توضیحات</label>
+                            <textarea class="form-control" id="fileDescription" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-primary" id="saveFileBtn">ذخیره</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#saveFileBtn").click(function() {
+                const fileData = {
+                    Data: {
+                        Title: $("#fileTitle").val(),
+                        Description: $("#fileDescription").val()
+                    }
+                };
+
+                $.ajax({
+                    url: "/File/Upload",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(fileData),
+                    success: function() {
+                        $("#addFileModal").modal("hide");
+                        $("#addFileForm")[0].reset();
+                        alert("فایل با موفقیت ذخیره شد!");
+                    },
+                    error: function(xhr) {
+                        alert("خطا: " + xhr.responseText);
+                    }
+                });
+            });
+
+            $("#showFilesBtn").click(function() {
+                $.ajax({
+                    url: "/File/GetAll",
+                    type: "GET",
+                    dataType: "json", // اضافه کردن این خط
+                    success: function(files) {
+                        console.log(files); // برای دیباگ
+
+                        if (files.length === 0) {
+                            $("#filesListContainer").html('<div class="alert alert-info">هیچ فایلی یافت نشد</div>');
+                            return;
+                        }
+                        let html = `<div class="list-group">`;
+                        files.forEach(file => {
+                            // اصلاح دسترسی به properties
+                            const title = file.data?.title || file.data?.Title || 'بدون عنوان';
+                            const desc = file.data?.description || file.data?.Description || 'بدون توضیح';
+
+                            html += `
+                                <div class="list-group-item">
+                                    <h5>${title}</h5>
+                                    <p>${desc}</p>
+                                    
+                                </div>`;
+                        });
+                        html += `</div>`;
+                        $("#filesListContainer").html(html);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        $("#filesListContainer").html(
+                            '<div class="alert alert-danger">خطا در دریافت داده‌ها. لطفا کنسول را بررسی کنید</div>'
+                        );
+                        }
+                });
+            });
+        });
+    </script>
+}
