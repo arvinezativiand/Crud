@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Crud.Infrastructure.Migrations
 {
     [DbContext(typeof(RPouyaDbContext))]
-    [Migration("20250403182928_AnotherTryToFixId-Long")]
-    partial class AnotherTryToFixIdLong
+    [Migration("20250405082431_FirstConnection")]
+    partial class FirstConnection
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,11 +97,11 @@ namespace Crud.Infrastructure.Migrations
 
             modelBuilder.Entity("Crud.Domain.Entities.RPouyaFile", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
@@ -286,8 +286,8 @@ namespace Crud.Infrastructure.Migrations
                 {
                     b.OwnsOne("Crud.Domain.Entities.JsonFile", "Data", b1 =>
                         {
-                            b1.Property<long>("RPouyaFileId")
-                                .HasColumnType("bigint");
+                            b1.Property<int>("RPouyaFileId")
+                                .HasColumnType("int");
 
                             b1.Property<string>("Description")
                                 .IsRequired()
