@@ -1,10 +1,11 @@
-using Crud.Application.DbTransaction;
+﻿using Crud.Application.DbTransaction;
 using Crud.Application.Services.Implimentations;
 using Crud.Application.Services.Interfaces;
 using Crud.Domain.Entities;
 using Crud.Domain.Repository;
 using Crud.Infrastructure.EFCore;
 using Crud.Infrastructure.Repository;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ builder.Services.AddTransient<IBaseRepository<RPouyaUser>, BaseRepository<RPouya
 builder.Services.AddTransient<IBaseRepository<RPouyaFile>, BaseRepository<RPouyaFile>>();
 builder.Services.AddTransient<IRPouyaUserService, RPouyaUserService>();
 builder.Services.AddTransient<IRPouyaFileService, RPouyaFileService>();
+builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>();
 builder.Services.AddTransient<IRPouyaDb, RPouyaDb>();
 
 //builder.Services.ConfigureApplicationCookie(options =>

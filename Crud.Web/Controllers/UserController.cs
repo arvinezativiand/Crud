@@ -1,6 +1,7 @@
 ﻿using Crud.Application.DTOs;
 using Crud.Application.Services.Interfaces;
 using Crud.Domain.Entities;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace Crud.Web.Controllers;
 public class UserController : Controller
 {
     private readonly IRPouyaUserService _rPouyaUserService;
+    private readonly IHtmlSanitizer _sanitizer;
 
-    public UserController(IRPouyaUserService rPouyaUserService)
+    public UserController(IRPouyaUserService rPouyaUserService, IHtmlSanitizer sanitizer)
     {
         _rPouyaUserService = rPouyaUserService;
+        _sanitizer = sanitizer;
     }
 
     public IActionResult Index()
@@ -43,6 +46,10 @@ public class UserController : Controller
         {
             return Json(new { success = false, error = "داده‌ها نامعتبر هستند" });
         }
+
+        user.FullName = _sanitizer.Sanitize(user.FullName);
+        user.UserName = _sanitizer.Sanitize(user.UserName);
+        user.IdNumber = _sanitizer.Sanitize(user.IdNumber);
 
         try
         {
