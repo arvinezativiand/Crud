@@ -1,5 +1,6 @@
 ﻿using Crud.Application.DTOs;
 using Crud.Application.Services.Interfaces;
+using Crud.Domain.DTOs;
 using Crud.Domain.Entities;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
@@ -25,10 +26,10 @@ public class UserController : Controller
         return View((object)accessLevel);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
+    [HttpPost]
+    public async Task<IActionResult> GetAllUsers([FromBody] PaginationRequest request)
     {
-        var users = await _rPouyaUserService.GetAllUsers();
+        var users = await _rPouyaUserService.GetAllUsers(request);
         return Json(users);
     }
 

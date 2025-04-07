@@ -1,5 +1,6 @@
 ﻿using Crud.Application.DTOs;
 using Crud.Application.Services.Interfaces;
+using Crud.Domain.DTOs;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,10 +36,10 @@ public class FileController : Controller
         return Ok(new { success = true });
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpPost]
+    public async Task<IActionResult> GetAll(PaginationRequest request)
     {
-        var files = await _fileService.GetAllFiles();
+        var files = await _fileService.GetAllFiles(request);
         return Ok(files);
     }
 }

@@ -4,19 +4,19 @@
 }
 
 <button id="showUsersBtn" class="btn btn-primary">نمایش همه کاربران</button>
-<button id="addUserBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">افزودن کاربر</button>
+<button id="addUserBtn" class="btn btn-success">افزودن کاربر</button>
 
-<div id="usersModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">لیست کاربران</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="usersListContainer">
-            </div>
-        </div>
-    </div>
+<div class="mt-4">
+    <table id="usersTable" class="table table-striped" style="width:100%; display:none;">
+        <thead>
+            <tr>
+                <th>نام کامل</th>
+                <th>کد ملی</th>
+                <th>نام کاربری</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 <div class="modal fade" id="addUserModal" tabindex="-1">
@@ -55,62 +55,7 @@
 </div>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
-    <script>
-        //Show Users
-        $(document).ready(function() {
-            $("#showUsersBtn").click(function() {
-                $.get("/User/GetAllUsers", function(users) {
-                    let html = "<ul>";
-                    users.forEach(user => {
-                        html += `<li> Full name: ${user.fullName} - Id number: ${user.idNumber}</li>`;
-                    });
-                    html += "</ul>";
-                    $("#usersListContainer").html(html);
 
-                    new bootstrap.Modal(document.getElementById('usersModal')).show();
-                });
-        });            
-            $(document).ready(function() {
-            var accessLevel = "@Model";
-
-            if (accessLevel === "AdminBasic") {
-                $("#addUserBtn").prop("disabled", true).css("opacity", "0.5");
-            }
-        });
-        });
-</script>
-<script>
-            //Add User
-            $(document).ready(function() {
-                $("#confirmAddUser").click(function() {
-                    const userData = {
-                        FullName: DOMPurify.sanitize($("#fullName").val().trim()),
-                        IdNumber: DOMPurify.sanitize($("#idNumber").val().trim()),
-                        UserName: DOMPurify.sanitize($("#userName").val().trim()),
-                        Password: $("#password").val()
-                    };
-
-                    $.ajax({
-                        url: "/User/AddUser",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(userData),
-                        success: function(response) {
-                            if (response.success) {
-                                $("#addUserModal").modal("hide");
-                                $("#addUserForm")[0].reset();
-                                alert("کاربر با موفقیت اضافه شد!");
-                            }
-                            },
-                    error: function(xhr) {
-                        alert("خطا در افزودن کاربر: " + xhr.responseText);
-                    }
-                });
-            });
-        });
-</script>
+<script src="~/js/UserIndex.js"></script>
 }

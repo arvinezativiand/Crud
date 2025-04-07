@@ -2,20 +2,23 @@
 using Crud.Application.DTOs;
 using Crud.Application.Mapper;
 using Crud.Application.Services.Interfaces;
+using Crud.Domain.DTOs;
 using Crud.Domain.Entities;
 using Crud.Domain.Repository;
+using Crud.Infrastructure.EFCore;
+using Crud.Infrastructure.Repository;
 
 namespace Crud.Application.Services.Implimentations;
 
-public class RPouyaUserService : IRPouyaUserService
+public class RPouyaUserService : BaseRepository<RPouyaUser>, IRPouyaUserService
 {
     private readonly IBaseRepository<RPouyaUser> _repository;
     private readonly IRPouyaDb _rPouyaDb;
 
-    public RPouyaUserService(IBaseRepository<RPouyaUser> repository, IRPouyaDb rPouyaDb)
+    public RPouyaUserService( IRPouyaDb rPouyaDb, RPouyaDbContext dbContext) : base(dbContext)
     {
-        _repository = repository;
         _rPouyaDb = rPouyaDb;
+
     }
 
     public async Task AddUser(RPouyaUserDTO userDTO)
@@ -38,16 +41,22 @@ public class RPouyaUserService : IRPouyaUserService
         });
     }
 
-    public async Task<List<RPouyaUserDTO>> GetAllUsers()
+    public async Task<PaginationResponse<List<RPouyaUserDTO>>> GetAllUsers(PaginationRequest request)
     {
         var result = await _rPouyaDb.Transaction(async () =>
         {
-            var action = await _repository.GetAllAsync();
+            var action = await _repository.GetAllAsync(request.start, request.length);
             return action;
         });
 
-        List<RPouyaUserDTO> users = RPouyaUserMapper.MapToDTOs(result);
-        return users;
+        List<RPouyaUserDTO> users = RPouyaUserMapper.MapToDTOs(result.Data);
+
+        return new PaginationResponse<List<RPouyaUserDTO>>
+        {
+            RecordsFiltered = result.RecordsFiltered,
+            RecordsTotal = result.RecordsTotal,
+            Data = users
+        };
     }
 
     public async Task<RPouyaUserDTO> GetUser(IdRPouyaUserDTO userDTO)

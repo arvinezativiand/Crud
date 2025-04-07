@@ -1,4 +1,5 @@
-﻿using Crud.Domain.Entities;
+﻿using Crud.Domain.DTOs;
+using Crud.Domain.Entities;
 using Crud.Domain.Repository;
 using Crud.Infrastructure.EFCore;
 using Microsoft.EntityFrameworkCore;
@@ -36,9 +37,17 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         return entity != null;
     }
 
-    public async Task<IEnumerable<TEntity>?> GetAllAsync()
+    public async Task<PaginationResponse<IEnumerable<TEntity>>> GetAllAsync(int skip = 0, int take = 10)
     {
-        return await _dbSet.ToListAsync<TEntity>();
+        var data = await _dbSet.Skip(skip).Take(take).ToListAsync();
+        var total = await _dbSet.CountAsync();
+        var filtered = total;
+        return new PaginationResponse<IEnumerable<TEntity>>
+        {
+            RecordsTotal = total,
+            RecordsFiltered = filtered,
+            Data = data
+        };
     }
 
     public async Task<TEntity?> GetByIdAsync(ulong id)

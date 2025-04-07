@@ -2,6 +2,7 @@
 using Crud.Application.DTOs;
 using Crud.Application.Mapper;
 using Crud.Application.Services.Interfaces;
+using Crud.Domain.DTOs;
 using Crud.Domain.Entities;
 using Crud.Domain.Repository;
 
@@ -28,15 +29,21 @@ public class RPouyaFileService : IRPouyaFileService
         });
     }
 
-    public async Task<List<RPouyaFileDTO>> GetAllFiles()
+    public async Task<PaginationResponse<List<RPouyaFileDTO>>> GetAllFiles(PaginationRequest request)
     {
         var result = await _rPouyaDb.Transaction(async () =>
         {
-            var action = await _repository.GetAllAsync();
+            var action = await _repository.GetAllAsync(request.start, request.length);
             return action;
         });
 
-        var fileDTOs = RPouyaFileMapper.MapToDTOs(result);
-        return fileDTOs;
+        var fileDTOs = RPouyaFileMapper.MapToDTOs(result.Data);
+
+        return new PaginationResponse<List<RPouyaFileDTO>>
+        {
+            RecordsFiltered = result.RecordsFiltered,
+            RecordsTotal = result.RecordsTotal,
+            Data = fileDTOs
+        };
     }
 }

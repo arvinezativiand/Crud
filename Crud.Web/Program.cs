@@ -19,10 +19,8 @@ builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
     .AddEntityFrameworkStores<RPouyaDbContext>().AddDefaultTokenProviders();
 
 //Services & Repositories
-builder.Services.AddTransient<IBaseRepository<RPouyaUser>, BaseRepository<RPouyaUser>>();
-builder.Services.AddTransient<IBaseRepository<RPouyaFile>, BaseRepository<RPouyaFile>>();
-builder.Services.AddTransient<IRPouyaUserService, RPouyaUserService>();
-builder.Services.AddTransient<IRPouyaFileService, RPouyaFileService>();
+builder.Services.AddScoped<IRPouyaUserService, RPouyaUserService>();
+builder.Services.AddScoped<IRPouyaFileService, RPouyaFileService>();
 builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>();
 builder.Services.AddTransient<IRPouyaDb, RPouyaDb>();
 
