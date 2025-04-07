@@ -1,4 +1,5 @@
 ﻿using Crud.Application.DTOs;
+using Crud.Application.Services.Implimentation;
 using Crud.Application.Services.Interfaces;
 using Crud.Domain.DTOs;
 using Crud.Domain.Entities;
@@ -12,11 +13,13 @@ namespace Crud.Web.Controllers;
 public class UserController : Controller
 {
     private readonly IRPouyaUserService _rPouyaUserService;
+    private readonly IGetExternalData _getExternalData;
     private readonly IHtmlSanitizer _sanitizer;
 
-    public UserController(IRPouyaUserService rPouyaUserService, IHtmlSanitizer sanitizer)
+    public UserController(IRPouyaUserService rPouyaUserService, IHtmlSanitizer sanitizer, IGetExternalData getExternalData)
     {
         _rPouyaUserService = rPouyaUserService;
+        _getExternalData = getExternalData;
         _sanitizer = sanitizer;
     }
 
@@ -61,5 +64,12 @@ public class UserController : Controller
         {
             return Json(new { success = false, error = ex.Message });
         }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> GetExternalUsers([FromBody] PaginationRequest request)
+    {
+        var users = await _getExternalData.GetExternalUsersService(request);
+        return Json(users);
     }
 }

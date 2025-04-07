@@ -1,10 +1,11 @@
 ﻿using Crud.Application.DbTransaction;
+using Crud.Application.Services.Implimentation;
 using Crud.Application.Services.Implimentations;
 using Crud.Application.Services.Interfaces;
 using Crud.Domain.Entities;
-using Crud.Domain.Repository;
+using Crud.Domain.Services;
 using Crud.Infrastructure.EFCore;
-using Crud.Infrastructure.Repository;
+using Crud.Infrastructure.Services;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -19,9 +20,16 @@ builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
     .AddEntityFrameworkStores<RPouyaDbContext>().AddDefaultTokenProviders();
 
 //Services & Repositories
-builder.Services.AddScoped<IRPouyaUserService, RPouyaUserService>();
-builder.Services.AddScoped<IRPouyaFileService, RPouyaFileService>();
+builder.Services.AddTransient<IRPouyaUserService, RPouyaUserService>();
+builder.Services.AddTransient<IRPouyaFileService, RPouyaFileService>();
 builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>();
+builder.Services.AddHttpClient<IApiService, ApiService>(client =>
+{
+    client.BaseAddress = new Uri("https://pm2.rahkarpouya.ir/api/1.0/users?order_by=Id&order_direction=asc&per_page=10");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+})
+.SetHandlerLifetime(TimeSpan.FromMinutes(5));
+builder.Services.AddTransient<IApiService, ApiService>();
 builder.Services.AddTransient<IRPouyaDb, RPouyaDb>();
 
 //builder.Services.ConfigureApplicationCookie(options =>

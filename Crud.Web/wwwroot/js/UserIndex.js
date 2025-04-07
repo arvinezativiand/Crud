@@ -15,7 +15,7 @@
         }
         $('#usersTable').DataTable({
             ajax: {
-                url: "/User/GetAllUsers",
+                url: "/User/GetExternalUsers",
                 type: "POST",
                 contentType: "application/json",
                 data: function (d) {
@@ -26,9 +26,11 @@
                 }
             },
             columns: [
+                { data: "id" },
+                { data: "email" },
                 { data: "fullName" },
-                { data: "idNumber" },
-                { data: "userName" }
+                { data: "city" },
+                { data: "status"}
             ],
             language: {
                 url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json"

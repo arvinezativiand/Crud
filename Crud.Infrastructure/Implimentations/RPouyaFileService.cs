@@ -5,17 +5,18 @@ using Crud.Application.Services.Interfaces;
 using Crud.Domain.DTOs;
 using Crud.Domain.Entities;
 using Crud.Domain.Repository;
+using Crud.Infrastructure.EFCore;
+using Crud.Infrastructure.Repository;
 
 namespace Crud.Application.Services.Implimentations;
 
-public class RPouyaFileService : IRPouyaFileService
+public class RPouyaFileService : BaseRepository<RPouyaFile>, IRPouyaFileService
 {
     private readonly IBaseRepository<RPouyaFile> _repository;
     private readonly IRPouyaDb _rPouyaDb;
 
-    public RPouyaFileService(IBaseRepository<RPouyaFile> repository, IRPouyaDb rPouyaDb)
+    public RPouyaFileService(IRPouyaDb rPouyaDb, RPouyaDbContext dbContext) : base(dbContext)
     {
-        _repository = repository;
         _rPouyaDb = rPouyaDb;
     }
 
