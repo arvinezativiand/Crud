@@ -26,16 +26,19 @@
                 }
             },
             columns: [
-                { data: "id" },
-                { data: "email" },
-                { data: "fullName" },
-                { data: "city" },
-                { data: "status"}
+                { data: "id", className: "text-center" },
+                { data: "email", className: "text-start" },
+                {
+                    data: "fullName",
+                    render: function (data, type, row) {
+                        return `<b>${data}</b>`;
+                    }
+                },
+                { data: "city" }
             ],
             language: {
                 url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fa.json"
             },
-            processing: true,
             serverSide: true,
             searching: true,
             ordering: true,

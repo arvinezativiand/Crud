@@ -1,9 +1,9 @@
 ﻿using Crud.Domain.DTOs;
-using Crud.Domain.Entities;
+using Crud.Domain.Entities.ExternalUser;
 
 namespace Crud.Domain.Services;
 
 public interface IApiService
 {
-    Task<GeneralResponse<IEnumerable<ExternalUsers>>> GetData(string url, string headers);
+    Task<GeneralResponse<FullExternalUserResponse>> GetData(string url, string token);
 }

@@ -5,5 +5,5 @@ namespace Crud.Application.Services.Interfaces;
 
 public interface IGetExternalData
 {
-    Task<List<ExternalUserDTO>> GetExternalUsersService(PaginationRequest request);
+    Task<PaginationResponse<List<ExternalUserDTO>>> GetExternalUsersService(PaginationRequest request);
 }

@@ -22,10 +22,11 @@ builder.Services.AddIdentity<RPouyaAdmin, IdentityRole>()
 //Services & Repositories
 builder.Services.AddTransient<IRPouyaUserService, RPouyaUserService>();
 builder.Services.AddTransient<IRPouyaFileService, RPouyaFileService>();
+builder.Services.AddTransient<IGetExternalData, GetExternalData>();
 builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>();
 builder.Services.AddHttpClient<IApiService, ApiService>(client =>
 {
-    client.BaseAddress = new Uri("https://pm2.rahkarpouya.ir/api/1.0/users?order_by=Id&order_direction=asc&per_page=10");
+    //client.BaseAddress = new Uri("https://pm2.rahkarpouya.ir/api/1.0/users?order_by=Id&order_direction=asc&per_page=10");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 })
 .SetHandlerLifetime(TimeSpan.FromMinutes(5));

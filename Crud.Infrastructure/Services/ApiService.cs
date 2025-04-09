@@ -1,5 +1,5 @@
 ﻿using Crud.Domain.DTOs;
-using Crud.Domain.Entities;
+using Crud.Domain.Entities.ExternalUser;
 using Crud.Domain.Services;
 using System.Net.Http.Json;
 
@@ -14,28 +14,27 @@ public class ApiService : IApiService
         _httpClient = httpClientFactory.CreateClient();
     }
 
-    public async Task<GeneralResponse<IEnumerable<ExternalUsers>>> GetData(string url, string header)
+    public async Task<GeneralResponse<FullExternalUserResponse>> GetData(string url, string token)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add("token", header);
-
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var response = await _httpClient.SendAsync(request);
-        var users = await response.Content.ReadFromJsonAsync<IEnumerable<ExternalUsers>>();
+        var users = await response.Content.ReadFromJsonAsync<FullExternalUserResponse>();
 
         if (!response.IsSuccessStatusCode || users == null)
         {
-            return new GeneralResponse<IEnumerable<ExternalUsers>>
+            return new GeneralResponse<FullExternalUserResponse>
             {
                 StatusCode = (int)response.StatusCode,
-                Message = "Data did not recived. Try again later",
+                Message = "Data does not recived.",
                 Data = null
             };
         }
 
-        return new GeneralResponse<IEnumerable<ExternalUsers>>
+        return new GeneralResponse<FullExternalUserResponse>
         {
-            StatusCode = 200,
+            StatusCode = (int)response.StatusCode,
             Message = "Data recived.",
             Data = users
         };

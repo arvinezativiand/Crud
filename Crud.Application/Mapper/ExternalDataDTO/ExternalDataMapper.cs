@@ -1,5 +1,5 @@
 ﻿using Crud.Application.DTOs.ExternalDataDTOs;
-using Crud.Domain.Entities;
+using Crud.Domain.Entities.ExternalUser;
 
 namespace Crud.Application.Mapper.ExternalDataDTO;
 
@@ -12,11 +12,11 @@ public static class ExternalDataMapper
         {
             userDTOs.Add(new ExternalUserDTO
             {
-                city = user.city,
-                email = user.email,
-                fullname = user.fullname,
-                id = user.id,
-                status = user.status
+                City = user.City,
+                Email = user.Email,
+                FullName = user.Fullname,
+                Id = user.Id,
+                Status = user.Status
             });
         }
 

@@ -2,7 +2,7 @@
 using Crud.Application.Mapper.ExternalDataDTO;
 using Crud.Application.Services.Interfaces;
 using Crud.Domain.DTOs;
-using Crud.Domain.Entities;
+using Crud.Domain.Entities.ExternalUser;
 using Crud.Domain.Services;
 using Crud.Infrastructure.Implimentations;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +11,6 @@ namespace Crud.Application.Services.Implimentation;
 
 public class GetExternalData : Pagination<ExternalUsers>, IGetExternalData
 {
-    private readonly IPagination<ExternalUsers> _pagination;
     private readonly IApiService _apiService;
     private readonly string token;
     private readonly string url;
@@ -26,16 +25,16 @@ public class GetExternalData : Pagination<ExternalUsers>, IGetExternalData
         url = configuration["ExternalApi:UrlString"] ?? "";
         order_by = configuration["ExternalApi:DefaultOrderBy"] ?? "Id";
         order_direction = configuration["ExternalApi:DefaultOrderDirection"] ?? "asc";
-        per_page = configuration["ExternalApi:DefaultPerPage"] ?? "1";
     }
 
-    public async Task<List<ExternalUserDTO>> GetExternalUsersService(PaginationRequest request)
+    public async Task<PaginationResponse<List<ExternalUserDTO>>> GetExternalUsersService(PaginationRequest request)
     {
         var queryString = new Dictionary<string, string>
         {
             ["order_by"] = order_by,
             ["order_direction"] = order_direction,
-            ["per_page"] = per_page
+            ["per_page"] = request.length.ToString(),
+            ["page"] = GetPageNumber(request).ToString(),
         };
 
         var uri = new UriBuilder(url)
@@ -43,14 +42,19 @@ public class GetExternalData : Pagination<ExternalUsers>, IGetExternalData
             Query = string.Join("&", queryString.Select(kvp => $"{kvp.Key}={kvp.Value}"))
         };
 
-        var result = await _apiService.GetData(url, token);
-        if (result.Data == null)
+        var result = await _apiService.GetData(uri.ToString(), token);
+        if (result.Data.Data == null)
         {
             return null;
         }
-        var userPaging = _pagination.Paging(result.Data, request);
-        var usersDto = ExternalDataMapper.MapToDTO(userPaging);
+        //var userPaging = Paging(result.Data, request);
+        var usersDto = ExternalDataMapper.MapToDTO(result.Data.Data);
 
-        return usersDto;
+        return new PaginationResponse<List<ExternalUserDTO>>
+        {
+            RecordsTotal = result.Data.Meta.Total,
+            RecordsFiltered = result.Data.Meta.Total,
+            Data = usersDto
+        };
     }
 }

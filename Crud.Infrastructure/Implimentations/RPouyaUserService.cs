@@ -4,7 +4,6 @@ using Crud.Application.Mapper;
 using Crud.Application.Services.Interfaces;
 using Crud.Domain.DTOs;
 using Crud.Domain.Entities;
-using Crud.Domain.Repository;
 using Crud.Infrastructure.EFCore;
 using Crud.Infrastructure.Repository;
 
@@ -12,7 +11,6 @@ namespace Crud.Application.Services.Implimentations;
 
 public class RPouyaUserService : BaseRepository<RPouyaUser>, IRPouyaUserService
 {
-    private readonly IBaseRepository<RPouyaUser> _repository;
     private readonly IRPouyaDb _rPouyaDb;
 
     public RPouyaUserService( IRPouyaDb rPouyaDb, RPouyaDbContext dbContext) : base(dbContext)
@@ -27,7 +25,7 @@ public class RPouyaUserService : BaseRepository<RPouyaUser>, IRPouyaUserService
 
         var result = await _rPouyaDb.Transaction<RPouyaUser>(async () =>
         {
-            var action = await _repository.AddAsync(user);
+            var action = await AddAsync(user);
             return action;
         });
     }
@@ -36,7 +34,7 @@ public class RPouyaUserService : BaseRepository<RPouyaUser>, IRPouyaUserService
     {
         var result = await _rPouyaDb.Transaction(async () =>
         {
-            var action = await _repository.DeleteAsync(userDTO.Id);
+            var action = await DeleteAsync(userDTO.Id);
             return action;
         });
     }
@@ -45,7 +43,7 @@ public class RPouyaUserService : BaseRepository<RPouyaUser>, IRPouyaUserService
     {
         var result = await _rPouyaDb.Transaction(async () =>
         {
-            var action = await _repository.GetAllAsync(request.start, request.length);
+            var action = await GetAllAsync(request.start, request.length);
             return action;
         });
 
@@ -63,7 +61,7 @@ public class RPouyaUserService : BaseRepository<RPouyaUser>, IRPouyaUserService
     {
         var result = await _rPouyaDb.Transaction(async () =>
         {
-            var action = await _repository.GetByIdAsync(userDTO.Id);
+            var action = await GetByIdAsync(userDTO.Id);
             return action;
         });
         var user = RPouyaUserMapper.MapToDTO(result);
@@ -82,7 +80,7 @@ public class RPouyaUserService : BaseRepository<RPouyaUser>, IRPouyaUserService
             user.FullName = userDTO.FullName;
             user.Password = userDTO.Password;
 
-            var action = await _repository.UpdateAsync(user);
+            var action = await UpdateAsync(user);
             return action;
         });
     }
